@@ -1,5 +1,7 @@
 package com.springboot.AddressBook_Spring.controller;
 
+import com.springboot.AddressBook_Spring.service.AddressBookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.springboot.AddressBook_Spring.dto.AddressBookDTO;
 import com.springboot.AddressBook_Spring.model.AddressBook;
 import org.springframework.http.ResponseEntity;
@@ -13,50 +15,49 @@ import java.util.List;
 public class AddressBookController {
     List<AddressBook> list = new ArrayList<>();
 
+    @Autowired
+    AddressBookService service;
+
     @GetMapping
     public ResponseEntity<List<AddressBook>> getAll() {
-        return ResponseEntity.ok(list);
+
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressBook> getById(@PathVariable int id){
-        for (AddressBook a : list) {
-            if (a.getId() == id) {
-                return ResponseEntity.ok(a);
-            }
-        }
+    public ResponseEntity<AddressBook> getById(
+            @PathVariable int id) {
 
-        return ResponseEntity.notFound().build();
+        AddressBook a = service.getById(id);
+
+        return ResponseEntity.ok(a);
     }
 
     @PostMapping
-    public ResponseEntity<AddressBook> add(@RequestBody AddressBookDTO dto){
-        AddressBook address =
-                new AddressBook(list.size()+1, dto);
+    public ResponseEntity<AddressBook> add(
+            @RequestBody AddressBookDTO dto) {
 
-        list.add(address);
-
-        return ResponseEntity.ok(address);
+        return ResponseEntity.ok(
+                service.add(dto)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AddressBook> update(@PathVariable int id,@RequestBody AddressBookDTO dto){
-        for (AddressBook a : list) {
+    public ResponseEntity<AddressBook> update(
+            @PathVariable int id,
+            @RequestBody AddressBookDTO dto) {
 
-            if (a.getId() == id) {
-                a.setName(dto.getName());
-                a.setCity(dto.getCity());
-                return ResponseEntity.ok(a);
-            }
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(
+                service.update(id, dto)
+        );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id){
+    public ResponseEntity<String> delete(
+            @PathVariable int id) {
 
-        list.removeIf(a -> a.getId() == id);
+        service.delete(id);
+
         return ResponseEntity.ok("Deleted");
     }
 
