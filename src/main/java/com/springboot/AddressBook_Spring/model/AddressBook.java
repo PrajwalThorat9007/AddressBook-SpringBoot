@@ -1,5 +1,7 @@
 package com.springboot.AddressBook_Spring.model;
 
+import com.springboot.AddressBook_Spring.dto.AddressBookDTO;
+
 public class AddressBook {
 
 
@@ -10,10 +12,10 @@ public class AddressBook {
 
     public AddressBook(){}
 
-    public void AddressBook(int id,String name,String city){
+    public AddressBook(int id, AddressBookDTO dto){
         this.id=id;
-        this.name=name;
-        this.city=city;
+        this.name=dto.getName();
+        this.city=dto.getCity();
     }
     public int getId() {
         return id;
